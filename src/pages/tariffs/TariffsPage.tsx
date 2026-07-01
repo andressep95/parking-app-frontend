@@ -17,6 +17,53 @@ const VEHICLE_LABELS: Record<string, string> = {
   BUS: 'Bus / Van',
 };
 
+const TARIFF_TYPE_BADGE: Record<string, { label: string; className: string }> = {
+  PER_MINUTE: { label: 'Por minuto', className: 'bg-blue-100 text-blue-700' },
+  BRACKET: { label: 'Por tramos', className: 'bg-purple-100 text-purple-700' },
+  FLAT_ENTRY: { label: 'Ingreso único', className: 'bg-green-100 text-green-700' },
+};
+
+function PricingCell({ t }: { t: Tariff }) {
+  const fmt = (n: number) => `$${n.toLocaleString('es-CL')}`;
+
+  if (t.tariffType === 'PER_MINUTE') {
+    return (
+      <div>
+        <div className="font-medium text-gray-900">
+          {fmt(t.pricePerMinute ?? 0)}/min
+        </div>
+        {t.maxCharge ? (
+          <div className="text-xs text-gray-500">Tope: {fmt(t.maxCharge)}</div>
+        ) : null}
+        {t.graceMinutes > 0 ? (
+          <div className="text-xs text-gray-500">Gracia: {t.graceMinutes} min</div>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (t.tariffType === 'BRACKET') {
+    return (
+      <div>
+        <div className="font-medium text-gray-900">
+          {t.brackets?.length ?? 0} tramo(s)
+        </div>
+        {t.maxCharge ? (
+          <div className="text-xs text-gray-500">Tope: {fmt(t.maxCharge)}</div>
+        ) : null}
+        {t.graceMinutes > 0 ? (
+          <div className="text-xs text-gray-500">Gracia: {t.graceMinutes} min</div>
+        ) : null}
+      </div>
+    );
+  }
+
+  // FLAT_ENTRY
+  return (
+    <div className="font-medium text-gray-900">{fmt(t.flatAmount ?? 0)} fijo</div>
+  );
+}
+
 interface ActiveModal {
   type: 'create' | 'deactivate';
   tariff?: Tariff;
@@ -78,25 +125,23 @@ export function TariffsPage() {
       render: (t) => <span className="text-gray-800">{t.name}</span>,
     },
     {
-      key: 'price',
-      header: 'Precio/hora',
-      render: (t) => (
-        <span className="font-medium text-gray-900">
-          ${t.pricePerHour.toLocaleString('es-CL')}
-        </span>
-      ),
+      key: 'tariffType',
+      header: 'Tipo tarifa',
+      render: (t) => {
+        const badge = TARIFF_TYPE_BADGE[t.tariffType];
+        return badge ? (
+          <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${badge.className}`}>
+            {badge.label}
+          </span>
+        ) : (
+          <span className="text-gray-500">{t.tariffType}</span>
+        );
+      },
     },
     {
-      key: 'minimum',
-      header: 'Mínimo',
-      render: (t) => (
-        <span className="text-gray-600">${t.minimumCharge.toLocaleString('es-CL')}</span>
-      ),
-    },
-    {
-      key: 'grace',
-      header: 'Gracia',
-      render: (t) => <span className="text-gray-600">{t.graceMinutes} min</span>,
+      key: 'pricing',
+      header: 'Precio',
+      render: (t) => <PricingCell t={t} />,
     },
     {
       key: 'status',
@@ -135,7 +180,9 @@ export function TariffsPage() {
         description="Precios por tipo de vehículo y locación"
         action={
           <button
-            onClick={() => setActiveModal({ type: 'create', locationId: locationFilter || undefined })}
+            onClick={() =>
+              setActiveModal({ type: 'create', locationId: locationFilter || undefined })
+            }
             className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
           >
             + Crear tarifa

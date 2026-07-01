@@ -118,26 +118,50 @@ export interface UpdateTerminalRequest {
   appVersion?: string;
 }
 
+export type TariffType = 'PER_MINUTE' | 'BRACKET' | 'FLAT_ENTRY';
+
+export interface TariffBracket {
+  id: string;
+  tariffId: string;
+  position: number;
+  fromMinute: number;
+  toMinute?: number;
+  pricePerMinute: number;
+}
+
 export interface Tariff {
   id: string;
   locationId: string;
   vehicleType: VehicleType;
+  tariffType: TariffType;
   name: string;
-  pricePerHour: number;
-  minimumCharge: number;
+  pricePerMinute?: number;
   graceMinutes: number;
+  maxCharge?: number;
+  flatAmount?: number;
+  brackets?: TariffBracket[];
   isActive: boolean;
   validFrom: string;
   validUntil?: string;
 }
 
+export interface BracketRequest {
+  position: number;
+  fromMinute: number;
+  toMinute?: number;
+  pricePerMinute: number;
+}
+
 export interface CreateTariffRequest {
   locationId: string;
   vehicleType: VehicleType;
+  tariffType: TariffType;
   name: string;
-  pricePerHour: number;
-  minimumCharge?: number;
+  pricePerMinute?: number;
   graceMinutes?: number;
+  maxCharge?: number;
+  flatAmount?: number;
+  brackets?: BracketRequest[];
 }
 
 export interface ApiError {

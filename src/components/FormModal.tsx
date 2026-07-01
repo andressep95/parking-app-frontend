@@ -7,8 +7,8 @@ interface Props {
 export function FormModal({ title, onClose, children }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-lg rounded-xl bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+      <div className="flex max-h-[90vh] w-full max-w-lg flex-col rounded-xl bg-white shadow-xl">
+        <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 px-6 py-4">
           <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
           <button
             onClick={onClose}
@@ -20,7 +20,7 @@ export function FormModal({ title, onClose, children }: Props) {
             </svg>
           </button>
         </div>
-        <div className="px-6 py-4">{children}</div>
+        <div className="overflow-y-auto px-6 py-4">{children}</div>
       </div>
     </div>
   );
