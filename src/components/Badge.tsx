@@ -1,6 +1,12 @@
-import type { LocationStatus, OrgStatus, TerminalStatus, UserStatus } from '../types/index';
+import type {
+  LocationStatus,
+  OrgStatus,
+  ParkingSessionStatus,
+  TerminalStatus,
+  UserStatus,
+} from '../types/index';
 
-type Status = UserStatus | OrgStatus | LocationStatus | TerminalStatus;
+type Status = UserStatus | OrgStatus | LocationStatus | TerminalStatus | ParkingSessionStatus;
 
 const CLASSES: Record<string, string> = {
   ACTIVE: 'bg-success-50 text-success-700 border border-success-200',
@@ -8,6 +14,8 @@ const CLASSES: Record<string, string> = {
   ONLINE: 'bg-success-50 text-success-700 border border-success-200',
   OFFLINE: 'bg-red-50 text-red-700 border border-red-200',
   MAINTENANCE: 'bg-amber-50 text-amber-700 border border-amber-200',
+  COMPLETED: 'bg-gray-100 text-gray-600 border border-gray-200',
+  CANCELLED: 'bg-red-50 text-red-700 border border-red-200',
 };
 
 const LABELS: Record<string, string> = {
@@ -16,6 +24,8 @@ const LABELS: Record<string, string> = {
   ONLINE: 'En línea',
   OFFLINE: 'Desconectado',
   MAINTENANCE: 'Mantenimiento',
+  COMPLETED: 'Completada',
+  CANCELLED: 'Cancelada',
 };
 
 interface Props {

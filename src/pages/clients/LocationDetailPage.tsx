@@ -542,6 +542,7 @@ export function LocationDetailPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Estado</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Patente</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Vehículo</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Ingreso</th>
@@ -554,16 +555,19 @@ export function LocationDetailPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {loadingTransactions ? (
-                <SkeletonRows cols={8} />
+                <SkeletonRows cols={9} />
               ) : !transactions?.length ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-sm text-gray-400">
-                    No hay transacciones registradas para esta instalación
+                  <td colSpan={9} className="py-12 text-center text-sm text-gray-400">
+                    No hay actividad registrada para esta instalación
                   </td>
                 </tr>
               ) : (
                 transactions.map((tx) => (
-                  <tr key={tx.transactionId} className="hover:bg-gray-50">
+                  <tr key={tx.parkingSessionId} className="hover:bg-gray-50">
+                    <td className="px-4 py-3">
+                      <Badge status={tx.status} />
+                    </td>
                     <td className="px-4 py-3 text-sm font-medium text-gray-900">{tx.plate}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">
                       {VEHICLE_LABELS[tx.vehicleType] ?? tx.vehicleType}
@@ -575,11 +579,15 @@ export function LocationDetailPage() {
                     <td className="px-4 py-3 text-sm text-gray-500">
                       {tx.durationMinutes != null ? `${tx.durationMinutes} min` : '—'}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-900">${tx.amount.toLocaleString('es-CL')}</td>
-                    <td className="px-4 py-3 text-sm text-gray-600">
-                      {PAYMENT_METHOD_LABELS[tx.paymentMethod] ?? tx.paymentMethod}
+                    <td className="px-4 py-3 text-sm text-gray-900">
+                      {tx.amount != null ? `$${tx.amount.toLocaleString('es-CL')}` : '—'}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{formatDateTime(tx.transactionAt)}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">
+                      {tx.paymentMethod != null ? PAYMENT_METHOD_LABELS[tx.paymentMethod] ?? tx.paymentMethod : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-500">
+                      {tx.transactionAt != null ? formatDateTime(tx.transactionAt) : '—'}
+                    </td>
                   </tr>
                 ))
               )}

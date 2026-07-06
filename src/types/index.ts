@@ -3,6 +3,7 @@ export type UserStatus = 'ACTIVE' | 'INACTIVE';
 export type OrgStatus = 'ACTIVE' | 'INACTIVE';
 export type LocationStatus = 'ACTIVE' | 'INACTIVE';
 export type TerminalStatus = 'ONLINE' | 'OFFLINE' | 'MAINTENANCE';
+export type ParkingSessionStatus = 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
 export type VehicleType = 'CAR' | 'MOTORCYCLE' | 'PICKUP' | 'BUS';
 
 export interface User {
@@ -167,17 +168,18 @@ export interface CreateTariffRequest {
 export type PaymentMethod = 'TUU_CARD' | 'TUU_CASH' | 'TUU_TRANSFER';
 
 export interface Transaction {
-  transactionId: string;
   parkingSessionId: string;
+  transactionId: string | null;
   plate: string;
   vehicleType: VehicleType;
+  status: ParkingSessionStatus;
   entryAt: string;
   exitAt: string | null;
   durationMinutes: number | null;
-  amount: number;
-  paymentMethod: PaymentMethod;
+  amount: number | null;
+  paymentMethod: PaymentMethod | null;
   tuuReference: string | null;
-  transactionAt: string;
+  transactionAt: string | null;
 }
 
 export interface ApiError {
