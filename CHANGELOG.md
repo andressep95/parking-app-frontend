@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### [e78fb17] — 2026-07-05
+
+**fix(layout): fix sidebar height, icon centering and hover jump**
+
+> what: Makes the sidebar span the full viewport height with the header bar beside it instead of above it, anchors every collapsed-rail icon at a fixed offset instead of toggling justify-content (which caused icons to snap left when the sidebar expanded), and turns the nav/sign-out active-hover background into a fixed square that grows outward on hover instead of a full-width or off-center rectangle
+> why: The header/sidebar nesting was backwards, icons looked left-biased and jumped position mid-transition, and the active pill looked like a stretched or lopsided rectangle instead of a clean centered square
+> breaking: false
+
+#### Changed
+
+- `DESIGN.md`
+- `src/components/Layout.tsx`
+- `src/components/Sidebar.tsx`
+
+---
+
 ### [68fc25a] — 2026-07-05
 
 **feat(locations): add transactions tab and fix tariff crash**
