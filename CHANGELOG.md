@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### [654f21f] — 2026-07-05
+
+**feat(clients): add breadcrumb trail and card-wrapped headers**
+
+> what: Adds a shared Breadcrumb component showing the full navigation path (Clientes > cliente > instalación) and wraps entity header blocks in cards per a new "no loose content on the page background" design rule
+> why: Detail pages only showed a one-level back link, and client/location headers floated directly on the gray page background instead of standing out like the rest of the card-based UI
+> breaking: false
+
+#### Added
+
+- `src/components/Breadcrumb.tsx`
+
+#### Changed
+
+- `DESIGN.md`
+- `src/pages/clients/ClientDetailPage.tsx`
+- `src/pages/clients/LocationDetailPage.tsx`
+
+---
+
 ### [a9a9094] — 2026-07-05
 
 **refactor(clients): remove non-Clientes views and routes**
