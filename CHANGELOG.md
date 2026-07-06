@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### [5f5a113] — 2026-07-05
+
+**feat(layout): add persistent full-width header bar**
+
+> what: Adds a HeaderBar above the sidebar+content row that always spans the full viewport width and renders the current page's breadcrumb via a new BreadcrumbContext/usePageBreadcrumb hook instead of each page rendering Breadcrumb inline; widens the sidebar's collapsed rail from 48px to 60px to match the header's height
+> why: Mirrors the Cloudflare-style dashboard layout the user asked for, where the top bar is always visible and its height matches the icon rail width
+> breaking: false
+
+#### Added
+
+- `src/components/BreadcrumbContext.tsx`
+
+#### Changed
+
+- `DESIGN.md`
+- `src/components/Breadcrumb.tsx`
+- `src/components/Layout.tsx`
+- `src/components/Sidebar.tsx`
+- `src/pages/clients/ClientDetailPage.tsx`
+- `src/pages/clients/ClientsPage.tsx`
+- `src/pages/clients/LocationDetailPage.tsx`
+
+---
+
 ### [654f21f] — 2026-07-05
 
 **feat(clients): add breadcrumb trail and card-wrapped headers**
