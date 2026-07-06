@@ -6,6 +6,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### [a9a9094] — 2026-07-05
+
+**refactor(clients): remove non-Clientes views and routes**
+
+> what: Reduces the app to only the Clientes flow (routes, sidebar, redirects) and deletes the Dashboard/Usuarios/Organizaciones/Locaciones/Terminales/Tarifas top-level pages and their form modals
+> why: The admin UI is being rebuilt around Clientes first; those views were unfocused and premature while API layers stay intact in src/api for later reuse
+> breaking: false
+
+#### Changed
+
+- `src/App.tsx`
+- `src/auth/ProtectedRoute.tsx`
+- `src/components/Sidebar.tsx`
+- `src/pages/auth/CallbackPage.tsx`
+- `src/pages/auth/LoginPage.tsx`
+
+#### Removed
+
+- `src/pages/dashboard/DashboardPage.tsx`
+- `src/pages/locations/LocationsPage.tsx`
+- `src/pages/organizations/OrgFormModal.tsx`
+- `src/pages/organizations/OrganizationsPage.tsx`
+- `src/pages/tariffs/TariffsPage.tsx`
+- `src/pages/terminals/TerminalsPage.tsx`
+- `src/pages/users/ResetPasswordModal.tsx`
+- `src/pages/users/UserFormModal.tsx`
+- `src/pages/users/UsersPage.tsx`
+
+---
+
 ### [5585e8f] — 2026-06-30
 
 **feat(tariff): add dynamic three-type tariff form and table**
