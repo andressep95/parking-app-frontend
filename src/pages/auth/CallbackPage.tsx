@@ -10,16 +10,16 @@ export function CallbackPage() {
   const didNavigate = useRef(false);
 
   useEffect(() => {
-    function goToDashboard() {
+    function goToClients() {
       if (didNavigate.current) return;
       didNavigate.current = true;
-      navigate('/dashboard', { replace: true });
+      navigate('/clients', { replace: true });
     }
 
     // Listen for Amplify's OAuth completion event
     const unsubscribe = Hub.listen('auth', ({ payload }) => {
       if (payload.event === 'signInWithRedirect') {
-        goToDashboard();
+        goToClients();
       }
       if (payload.event === 'signInWithRedirect_failure') {
         setError('Error al autenticar. Por favor intenta de nuevo.');
@@ -30,7 +30,7 @@ export function CallbackPage() {
     // finished the token exchange before this effect mounted
     fetchAuthSession()
       .then((session) => {
-        if (session.tokens) goToDashboard();
+        if (session.tokens) goToClients();
       })
       .catch(() => {
         // Exchange still in progress; Hub event will handle it

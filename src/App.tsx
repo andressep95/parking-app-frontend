@@ -9,17 +9,6 @@ import { Layout } from './components/Layout';
 const LoginPage = lazy(() =>
   import('./pages/auth/LoginPage').then((m) => ({ default: m.LoginPage })),
 );
-const DashboardPage = lazy(() =>
-  import('./pages/dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage })),
-);
-const UsersPage = lazy(() =>
-  import('./pages/users/UsersPage').then((m) => ({ default: m.UsersPage })),
-);
-const OrganizationsPage = lazy(() =>
-  import('./pages/organizations/OrganizationsPage').then((m) => ({
-    default: m.OrganizationsPage,
-  })),
-);
 const ClientsPage = lazy(() =>
   import('./pages/clients/ClientsPage').then((m) => ({ default: m.ClientsPage })),
 );
@@ -28,15 +17,6 @@ const ClientDetailPage = lazy(() =>
 );
 const LocationDetailPage = lazy(() =>
   import('./pages/clients/LocationDetailPage').then((m) => ({ default: m.LocationDetailPage })),
-);
-const LocationsPage = lazy(() =>
-  import('./pages/locations/LocationsPage').then((m) => ({ default: m.LocationsPage })),
-);
-const TerminalsPage = lazy(() =>
-  import('./pages/terminals/TerminalsPage').then((m) => ({ default: m.TerminalsPage })),
-);
-const TariffsPage = lazy(() =>
-  import('./pages/tariffs/TariffsPage').then((m) => ({ default: m.TariffsPage })),
 );
 
 const queryClient = new QueryClient({
@@ -67,14 +47,6 @@ export default function App() {
 
               <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'CUSTOMER']} />}>
                 <Route element={<Layout />}>
-                  <Route path="/dashboard" element={<DashboardPage />} />
-                  <Route path="/users" element={<UsersPage />} />
-                  <Route
-                    path="/organizations"
-                    element={<ProtectedRoute allowedRoles={['ADMIN']} />}
-                  >
-                    <Route index element={<OrganizationsPage />} />
-                  </Route>
                   <Route
                     path="/clients"
                     element={<ProtectedRoute allowedRoles={['ADMIN']} />}
@@ -83,9 +55,6 @@ export default function App() {
                     <Route path=":id" element={<ClientDetailPage />} />
                     <Route path=":clientId/locations/:locationId" element={<LocationDetailPage />} />
                   </Route>
-                  <Route path="/locations" element={<LocationsPage />} />
-                  <Route path="/terminals" element={<TerminalsPage />} />
-                  <Route path="/tariffs" element={<TariffsPage />} />
                 </Route>
               </Route>
 

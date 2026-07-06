@@ -26,10 +26,10 @@ export function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // If already authenticated, go straight to dashboard
+  // If already authenticated, go straight to clients
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
-      navigate('/dashboard', { replace: true });
+      navigate('/clients', { replace: true });
     }
   }, [authLoading, isAuthenticated, navigate]);
 
