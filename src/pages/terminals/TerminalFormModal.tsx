@@ -75,7 +75,7 @@ export function TerminalFormModal({ terminal, prefillOrgId, onClose }: Props) {
               onChange={(e) => set('serialNumber', e.target.value)}
               placeholder="TUU-2024-001"
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
             <p className="mt-1 text-xs text-gray-400">
               El número de serie es inmutable una vez registrado.
@@ -93,7 +93,7 @@ export function TerminalFormModal({ terminal, prefillOrgId, onClose }: Props) {
             onChange={(e) => set('model', e.target.value)}
             placeholder="TUU Pro"
             required
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
@@ -106,7 +106,7 @@ export function TerminalFormModal({ terminal, prefillOrgId, onClose }: Props) {
               value={form.orgId}
               onChange={(e) => set('orgId', e.target.value)}
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             >
               <option value="">— Seleccionar cliente —</option>
               {orgs?.map((o) => (
@@ -125,7 +125,7 @@ export function TerminalFormModal({ terminal, prefillOrgId, onClose }: Props) {
             value={form.appVersion}
             onChange={(e) => set('appVersion', e.target.value)}
             placeholder="2.3.1"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
@@ -135,14 +135,14 @@ export function TerminalFormModal({ terminal, prefillOrgId, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            className="rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
           >
             Cancelar
           </button>
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+            className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {mutation.isPending ? 'Guardando...' : isEdit ? 'Actualizar' : 'Registrar terminal'}
           </button>

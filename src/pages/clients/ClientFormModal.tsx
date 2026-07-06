@@ -102,7 +102,7 @@ export function ClientFormModal({ org, onClose }: Props) {
             onChange={(e) => set('orgName', e.target.value)}
             placeholder="Empresa S.A."
             required
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
@@ -116,7 +116,7 @@ export function ClientFormModal({ org, onClose }: Props) {
             onChange={(e) => set('rutCompany', e.target.value)}
             placeholder="76000000-0"
             required
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
           {rutError !== '' ? <p className="mt-1 text-xs text-red-600">{rutError}</p> : null}
         </div>
@@ -130,7 +130,7 @@ export function ClientFormModal({ org, onClose }: Props) {
             value={form.orgEmail}
             onChange={(e) => set('orgEmail', e.target.value)}
             required
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
@@ -141,7 +141,7 @@ export function ClientFormModal({ org, onClose }: Props) {
             value={form.phoneNumber}
             onChange={(e) => set('phoneNumber', e.target.value)}
             placeholder="+56912345678"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
@@ -154,7 +154,7 @@ export function ClientFormModal({ org, onClose }: Props) {
               value={form.adminUserId}
               onChange={(e) => set('adminUserId', e.target.value)}
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             >
               <option value="">— Seleccionar usuario CUSTOMER —</option>
               {customerUsers.map((u) => (
@@ -172,14 +172,14 @@ export function ClientFormModal({ org, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            className="rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
           >
             Cancelar
           </button>
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+            className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {mutation.isPending ? 'Guardando...' : isEdit ? 'Actualizar' : 'Crear cliente'}
           </button>

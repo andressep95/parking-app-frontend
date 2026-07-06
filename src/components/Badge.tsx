@@ -3,11 +3,11 @@ import type { LocationStatus, OrgStatus, TerminalStatus, UserStatus } from '../t
 type Status = UserStatus | OrgStatus | LocationStatus | TerminalStatus;
 
 const CLASSES: Record<string, string> = {
-  ACTIVE: 'bg-green-100 text-green-800',
-  INACTIVE: 'bg-gray-100 text-gray-600',
-  ONLINE: 'bg-green-100 text-green-800',
-  OFFLINE: 'bg-red-100 text-red-700',
-  MAINTENANCE: 'bg-yellow-100 text-yellow-800',
+  ACTIVE: 'bg-success-50 text-success-700 border border-success-200',
+  INACTIVE: 'bg-gray-100 text-gray-600 border border-gray-200',
+  ONLINE: 'bg-success-50 text-success-700 border border-success-200',
+  OFFLINE: 'bg-red-50 text-red-700 border border-red-200',
+  MAINTENANCE: 'bg-amber-50 text-amber-700 border border-amber-200',
 };
 
 const LABELS: Record<string, string> = {

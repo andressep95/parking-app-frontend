@@ -25,6 +25,14 @@ function ChevronLeftIcon() {
   );
 }
 
+function TabCheckIcon() {
+  return (
+    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
 function validateRut(rut: string): boolean {
   const clean = rut.replace(/[^0-9kK]/g, '').toUpperCase();
   if (clean.length < 2) return false;
@@ -107,7 +115,7 @@ function OperatorFormModal({
             onChange={(e) => set('rut', e.target.value)}
             placeholder="12345678-9"
             required
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
           {rutError ? <p className="mt-1 text-xs text-red-600">{rutError}</p> : null}
         </div>
@@ -123,7 +131,7 @@ function OperatorFormModal({
             placeholder="Mínimo 10 caracteres"
             required
             minLength={10}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
@@ -137,7 +145,7 @@ function OperatorFormModal({
               value={form.givenName}
               onChange={(e) => set('givenName', e.target.value)}
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
           <div>
@@ -149,7 +157,7 @@ function OperatorFormModal({
               value={form.familyName}
               onChange={(e) => set('familyName', e.target.value)}
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
         </div>
@@ -163,7 +171,7 @@ function OperatorFormModal({
             value={form.email}
             onChange={(e) => set('email', e.target.value)}
             required
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
@@ -174,7 +182,7 @@ function OperatorFormModal({
             value={form.phoneNumber}
             onChange={(e) => set('phoneNumber', e.target.value)}
             placeholder="+56912345678"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
@@ -184,14 +192,14 @@ function OperatorFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            className="rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
           >
             Cancelar
           </button>
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+            className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {mutation.isPending ? 'Creando...' : 'Crear operador'}
           </button>
@@ -208,11 +216,18 @@ const VEHICLE_LABELS: Record<string, string> = {
   BUS: 'Bus / Van',
 };
 
-const TERMINAL_STATUS_LABELS: Record<string, string> = {
-  ONLINE: 'En línea',
-  OFFLINE: 'Desconectado',
-  MAINTENANCE: 'Mantenimiento',
-};
+function formatTariffPrice(tar: Tariff): string {
+  switch (tar.tariffType) {
+    case 'PER_MINUTE':
+      return `$${(tar.pricePerMinute ?? 0).toLocaleString('es-CL')}/min`;
+    case 'FLAT_ENTRY':
+      return `$${(tar.flatAmount ?? 0).toLocaleString('es-CL')} fijo`;
+    case 'BRACKET':
+      return 'Por tramos';
+    default:
+      return '—';
+  }
+}
 
 function SkeletonRows({ cols }: { cols: number }) {
   return (
@@ -332,7 +347,7 @@ export function LocationDetailPage() {
           </div>
           <button
             onClick={() => setEditLocation(true)}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Editar instalación
           </button>
@@ -340,22 +355,21 @@ export function LocationDetailPage() {
       ) : null}
 
       {/* Tabs */}
-      <div className="mb-4 border-b border-gray-200">
-        <nav className="flex gap-1">
-          {tabs.map(({ key, label }) => (
-            <button
-              key={key}
-              onClick={() => setTab(key)}
-              className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
-                tab === key
-                  ? 'border-gray-900 text-gray-900'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
+      <div className="mb-4 inline-flex rounded-xl border border-gray-200 bg-white p-1">
+        {tabs.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setTab(key)}
+            className={`flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
+              tab === key
+                ? 'bg-brand-600 text-white'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            {tab === key ? <TabCheckIcon /> : null}
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* Tab: Operadores */}
@@ -364,7 +378,7 @@ export function LocationDetailPage() {
           <div className="mb-4 flex justify-end">
             <button
               onClick={() => setOperatorModal(true)}
-              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+              className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
             >
               + Nuevo operador
             </button>
@@ -436,7 +450,7 @@ export function LocationDetailPage() {
             </p>
             <button
               onClick={() => setTariffModal({ type: 'create' })}
-              className="ml-4 shrink-0 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+              className="ml-4 shrink-0 rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
             >
               + Nueva tarifa
             </button>
@@ -447,8 +461,8 @@ export function LocationDetailPage() {
                 <tr className="border-b border-gray-200 bg-gray-50">
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Nombre</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Vehículo</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Precio/hora</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Mínimo</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Precio</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Tope</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Gracia</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Vigente desde</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Activa</th>
@@ -471,11 +485,9 @@ export function LocationDetailPage() {
                       <td className="px-4 py-3 text-sm text-gray-600">
                         {VEHICLE_LABELS[tar.vehicleType] ?? tar.vehicleType}
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900">
-                        ${tar.pricePerHour.toLocaleString('es-CL')}
-                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-900">{formatTariffPrice(tar)}</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
-                        ${tar.minimumCharge.toLocaleString('es-CL')}
+                        {tar.maxCharge !== undefined ? `$${tar.maxCharge.toLocaleString('es-CL')}` : '—'}
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-500">{tar.graceMinutes} min</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
@@ -483,10 +495,10 @@ export function LocationDetailPage() {
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium border ${
                             tar.isActive
-                              ? 'bg-green-50 text-green-700'
-                              : 'bg-gray-100 text-gray-500'
+                              ? 'bg-success-50 text-success-700 border-success-200'
+                              : 'bg-gray-100 text-gray-500 border-gray-200'
                           }`}
                         >
                           {tar.isActive ? 'Sí' : 'No'}

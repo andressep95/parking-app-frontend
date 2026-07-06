@@ -40,7 +40,7 @@ export function Sidebar() {
 
       {/* Logo */}
       <div className="flex h-12 shrink-0 items-center border-b border-gray-200 px-3 gap-3">
-        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-gray-900">
+        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-brand-600">
           <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 3h14M5 3v18M5 3H3m16 0v18m0-18h2M5 21h14M9 8h3a2 2 0 110 4H9V8z" />
           </svg>
@@ -59,9 +59,9 @@ export function Sidebar() {
                 to={item.to}
                 title={item.label}
                 className={({ isActive }) =>
-                  `flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors ${
+                  `flex items-center gap-2.5 rounded px-2 py-1.5 text-sm transition-colors ${
                     isActive
-                      ? 'bg-gray-100 text-gray-900 font-medium'
+                      ? 'bg-brand-50 text-brand-700 font-medium'
                       : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
                   }`
                 }

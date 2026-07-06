@@ -49,7 +49,7 @@ export function ClientsPage() {
         action={
           <button
             onClick={() => setModal({ type: 'create' })}
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+            className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
           >
             + Nuevo cliente
           </button>
@@ -74,7 +74,7 @@ export function ClientsPage() {
             <p className="text-sm text-gray-400">No hay clientes registrados</p>
             <button
               onClick={() => setModal({ type: 'create' })}
-              className="mt-3 text-sm text-gray-900 underline underline-offset-2"
+              className="mt-3 text-sm font-medium text-brand-600 underline underline-offset-2"
             >
               Crear el primero
             </button>
@@ -113,7 +113,7 @@ export function ClientsPage() {
                     >
                       <button
                         onClick={() => navigate(`/clients/${client.id}`)}
-                        className="text-xs text-gray-700 hover:underline"
+                        className="text-xs font-medium text-brand-600 hover:underline"
                       >
                         Ver detalle
                       </button>

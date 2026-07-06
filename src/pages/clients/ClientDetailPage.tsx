@@ -40,6 +40,14 @@ function ChevronLeftIcon() {
   );
 }
 
+function TabCheckIcon() {
+  return (
+    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
 export function ClientDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -138,7 +146,7 @@ export function ClientDetailPage() {
           </div>
           <button
             onClick={() => setEditClient(true)}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Editar cliente
           </button>
@@ -146,22 +154,21 @@ export function ClientDetailPage() {
       ) : null}
 
       {/* Tabs */}
-      <div className="mb-4 border-b border-gray-200">
-        <nav className="flex gap-1">
-          {([['locations', 'Instalaciones'], ['terminals', 'Terminales'], ['info', 'Información']] as const).map(([key, label]) => (
-            <button
-              key={key}
-              onClick={() => setTab(key)}
-              className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
-                tab === key
-                  ? 'border-gray-900 text-gray-900'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
+      <div className="mb-4 inline-flex rounded-xl border border-gray-200 bg-white p-1">
+        {([['locations', 'Instalaciones'], ['terminals', 'Terminales'], ['info', 'Información']] as const).map(([key, label]) => (
+          <button
+            key={key}
+            onClick={() => setTab(key)}
+            className={`flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
+              tab === key
+                ? 'bg-brand-600 text-white'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            {tab === key ? <TabCheckIcon /> : null}
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* Tab: Instalaciones */}
@@ -170,7 +177,7 @@ export function ClientDetailPage() {
           <div className="mb-4 flex justify-end">
             <button
               onClick={() => setLocModal({ type: 'create' })}
-              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+              className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
             >
               + Nueva instalación
             </button>
@@ -267,7 +274,7 @@ export function ClientDetailPage() {
           <div className="mb-4 flex justify-end">
             <button
               onClick={() => setTerminalModal({ type: 'create' })}
-              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+              className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
             >
               + Nuevo terminal
             </button>

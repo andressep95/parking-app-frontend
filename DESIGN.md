@@ -20,43 +20,51 @@
 
 ## Design Language
 
-The visual style mirrors **shadcn/ui** principles: clean, minimal, high-contrast text on neutral backgrounds, generous whitespace, subtle borders instead of heavy shadows.
+The visual style mirrors **shadcn/ui** structure (clean, minimal, generous whitespace, subtle borders instead of heavy shadows) but with the **brand color and shape language of the mobile operator app** layered on top, so web and mobile feel like the same product.
+
+> **Brand reference:** `img/operation_entry_screen.png` and `img/operation_exit_screen.png` are the source of truth for brand blue, the success/green accent, chip and segmented-control shapes, and button radius. When in doubt about a color or shape, match those screenshots rather than generic Tailwind defaults.
 
 ### Color Tokens
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `brand-50` | `#eff6ff` | Light tints, hover backgrounds |
-| `brand-100` | `#dbeafe` | Badge backgrounds |
-| `brand-500` | `#3b82f6` | Interactive elements |
-| `brand-600` | `#2563eb` | Primary actions, active nav, CTA buttons |
-| `brand-700` | `#1d4ed8` | Button hover states |
-| `brand-800` | `#1e40af` | Dark accents |
-| `brand-900` | `#1e3a8a` | Role badge backgrounds on dark sidebar |
-| `slate-50` | Tailwind default | Page background |
-| `slate-700` | Tailwind default | Sidebar dividers, avatar bg |
-| `slate-800` | Tailwind default | Sidebar hover states |
-| `slate-900` | Tailwind default | Sidebar background |
+| `brand-50` | `#f2f5fd` | Light tints, active-nav pill background |
+| `brand-100` | `#e0e7fb` | Badge/chip backgrounds |
+| `brand-200` | `#bccbf6` | Subtle borders on brand-tinted surfaces |
+| `brand-500` | `#436ce5` | Focus rings, input focus borders |
+| `brand-600` | `#3662e3` | Primary actions, active nav text, CTA buttons, active segmented-tab fill — sampled directly from the mobile app's ENTRADA/SALIDA toggle |
+| `brand-700` | `#1b47c5` | Button hover states |
+| `brand-800` | `#163aa1` | Dark accents |
+| `brand-900` | `#122f82` | Darkest brand accent |
+| `success-50` | `#ecfdf5` | "Active"/"Online" badge background, mirrors mobile's "Libres" stat card |
+| `success-200` | `#a7f3d0` | Badge border |
+| `success-700` | `#047857` | "Active"/"Online" badge text |
+| `gray-50` | Tailwind default | Page background |
+| `gray-200` | Tailwind default | Panel/table borders, dividers |
+| `gray-900` | Tailwind default | Page titles, primary text (never as a button background) |
+
+> Primary buttons must use `bg-brand-600` — never `bg-gray-900`/black. Black CTAs read as flat and off-brand next to the mobile app's blue.
 
 ### Typography
 
 - Font: system-ui (browser default — no custom font loaded)
 - Base size: `text-sm` (14px) for body and nav
-- Page titles: `text-2xl font-bold text-slate-900`
-- Section labels: `text-xs font-semibold uppercase text-slate-500 tracking-wider`
-- Table headers: `text-xs font-semibold uppercase text-slate-500`
+- Page titles: `text-2xl font-bold text-gray-900`
+- Section labels: `text-xs font-semibold uppercase text-gray-500 tracking-wider`
+- Table headers: `text-xs font-semibold uppercase text-gray-500`
 
 ### Spacing & Radius
 
 - Card/panel padding: `p-6`
-- Input/button radius: `rounded-lg` (8px)
-- Sidebar nav item radius: `rounded-lg`
+- Input/button radius: `rounded-xl` (12px) — softer than default shadcn, matches the mobile app's form fields and CTA
+- Chips / segmented-tab pills / nav active state: `rounded-full` or `rounded-lg` inside a `rounded-xl` pill container
+- Sidebar nav item radius: `rounded`
 - Table row: no radius, full-width
-- Modal: `rounded-xl`
+- Modal: `rounded-2xl`
 
 ### Elevation
 
-Avoid heavy `box-shadow`. Use `border border-slate-200` for panels. Modals get `shadow-xl`.
+Avoid heavy `box-shadow`. Use `border border-gray-200` for panels. Modals get `shadow-xl` + `backdrop-blur-sm` on the overlay.
 
 ---
 
@@ -64,9 +72,9 @@ Avoid heavy `box-shadow`. Use `border border-slate-200` for panels. Modals get `
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│  Sidebar (collapsible)  │  Main content area             │
-│  w-64 (expanded)        │  flex-1, overflow-y-auto       │
-│  w-16 (collapsed)       │  p-6 or p-8                    │
+│  Sidebar (hover-expand)  │  Main content area             │
+│  w-52 (hovered)          │  flex-1, overflow-y-auto       │
+│  w-12 (default)          │  p-6 or p-8                    │
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -74,47 +82,35 @@ The `Layout` component (`src/components/Layout.tsx`) renders `<Sidebar />` + `<O
 
 ---
 
-## Sidebar — Collapsible
+## Sidebar — Hover-expand
 
 ### Behavior
 
-- **Expanded** (`w-64`): Shows icon + label for each nav item. Logo + app name visible.
-- **Collapsed** (`w-16`): Shows icon only. Logo shrinks to icon only. Labels hidden. Tooltip on hover shows the label.
-- State stored in `localStorage` key `sidebar-collapsed` so it persists across refreshes.
-- Toggle button: chevron icon at the bottom of the nav, or at the top-right edge of the sidebar.
+- **Default** (`w-12`): Icon-only rail.
+- **Hovered** (`group-hover:w-52`): Expands to show icon + label. No toggle button or persisted state — purely a CSS hover transition on the parent `group`.
+- Nav items are filtered by permission (e.g. "Clientes" only renders for `canManageOrgs`), so the list can be a single item.
 
-### Anatomy (expanded)
+### Anatomy (hovered)
 
 ```
 ┌─────────────────────┐
-│  [P]  Parking App   │  ← Logo + name (hidden when collapsed)
-│       Dashboard     │
+│  [P]  Parking App   │  ← Logo mark (bg-brand-600) + name
 ├─────────────────────┤
-│  ⊞  Dashboard       │
-│  👥  Usuarios       │
-│  🏢  Clientes       │
-│  📍  Locaciones     │
-│  🖥  Terminales      │
-│  💲  Tarifas        │
+│  🏢  Clientes       │  ← currently the only nav item (ADMIN only)
 ├─────────────────────┤
-│  [avatar] Nombre    │  ← User info (avatar only when collapsed)
+│  [avatar] Nombre    │  ← User info
 │           ADMIN     │
 │  ↩  Cerrar sesión   │
 └─────────────────────┘
 ```
 
-### Anatomy (collapsed, w-16)
+### Anatomy (default, w-12)
 
 ```
 ┌────┐
-│ P  │  ← Logo only
+│ P  │  ← Logo mark only
 ├────┤
-│ ⊞  │
-│ 👥 │
 │ 🏢 │
-│ 📍 │
-│ 🖥  │
-│ 💲 │
 ├────┤
 │ av │  ← Avatar only
 │ ↩  │
@@ -123,11 +119,13 @@ The `Layout` component (`src/components/Layout.tsx`) renders `<Sidebar />` + `<O
 
 ### Transition
 
-Use `transition-all duration-200 ease-in-out` on the sidebar width. Icon stays centered; label fades out with `opacity-0 w-0 overflow-hidden` when collapsed.
+`transition-[width] duration-200 ease-in-out` on the `<aside>`. Labels use `opacity-0 group-hover:opacity-100 transition-opacity duration-150 delay-75`.
 
 ### Active state
 
-Active nav item: `bg-brand-600 text-white`. Hover: `hover:bg-slate-800 hover:text-white text-slate-300`.
+Active nav item: `bg-brand-50 text-brand-700 font-medium` — a light brand-tinted pill, mirroring the mobile app's active bottom-nav item (light-blue pill behind the icon+label). Hover (inactive): `hover:bg-gray-50 hover:text-gray-700`.
+
+> Only ADMIN-facing views (Clientes) exist in the UI today. CUSTOMER-facing views (Dashboard, Locaciones, Terminales, Tarifas as customer self-service) were intentionally removed to keep the app focused while the admin experience is built out — they'll return once the CUSTOMER flows are designed. Their API modules remain in `src/api/` untouched.
 
 ---
 
@@ -161,20 +159,17 @@ A **Cliente** is a company (razón social) identified by `rutCompany`. Each clie
 
 | Icon | Label | Route | Visibility |
 |------|-------|-------|-----------|
-| LayoutDashboard | Dashboard | `/dashboard` | All roles |
-| Users | Usuarios | `/users` | ADMIN only |
 | Building2 | Clientes | `/clients` | ADMIN only |
-| MapPin | Locaciones | `/locations` | ADMIN, CUSTOMER |
-| Monitor | Terminales | `/terminals` | ADMIN, CUSTOMER |
-| CircleDollarSign | Tarifas | `/tarifas` | ADMIN, CUSTOMER |
 
 > **Note:** "Organizaciones" is renamed to **"Clientes"** everywhere in the UI. The route changes from `/organizations` to `/clients`. The underlying API entity remains `Organization`.
+>
+> Dashboard, Usuarios, Locaciones (top-level), Terminales (top-level) and Tarifas (top-level) were removed from navigation — see the note at the end of the Sidebar section above. `Locaciones`, `Terminales`, and `Tarifas` still exist as nested tabs/modals inside the Cliente detail flow (`ClientDetailPage`, `LocationDetailPage`).
 
 ---
 
 ## Page Patterns
 
-### List page (e.g., Clientes, Usuarios, Locaciones)
+### List page (e.g., Clientes)
 
 ```
 PageHeader
@@ -198,13 +193,17 @@ PageHeader
   badge: status (ACTIVE / INACTIVE)
   action: Editar cliente
 
-Tabs:
-  [Instalaciones]  [Info]
+Tabs (segmented pill control, see Component Patterns):
+  [Instalaciones]  [Terminales]  [Información]
 
 Tab — Instalaciones:
   DataTable of locations belonging to this org
   Row click → /clients/:id/locations/:locationId
   Action: + Nueva instalación
+
+Tab — Terminales:
+  Terminals belonging to this org
+  Action: + Nuevo terminal
 ```
 
 ### Detail page — Instalación (`/clients/:clientId/locations/:locationId`)
@@ -218,21 +217,16 @@ PageHeader
   badge: status
   action: Editar instalación
 
-Tabs:
-  [Operadores]  [Terminales]  [Tarifas]  [Info]
+Tabs (segmented pill control, see Component Patterns):
+  [Operadores]  [Tarifas]
 
 Tab — Operadores:
   Users with role=OPERATOR and locationId=this location
   Actions: Asignar operador, Desactivar
 
-Tab — Terminales:
-  Terminals assigned to this location
-  Columns: serial, model, status, last heartbeat
-  Actions: + Agregar terminal
-
 Tab — Tarifas:
-  Tariffs for this location
-  Columns: name, vehicleType, pricePerHour, validFrom, active
+  Tariffs for this location (tariffType: PER_MINUTE | BRACKET | FLAT_ENTRY)
+  Columns: name, vehicleType, price (derived from tariffType), maxCharge, graceMinutes, validFrom, active
   Actions: + Nueva tarifa
 ```
 
@@ -244,48 +238,72 @@ Tab — Tarifas:
 
 | Variant | Classes | Usage |
 |---------|---------|-------|
-| Primary | `bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg text-sm font-medium` | Main CTA |
-| Secondary | `border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium` | Cancel, secondary actions |
-| Destructive | `bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium` | Delete, disable |
-| Ghost | `text-slate-600 hover:bg-slate-100 px-3 py-1.5 rounded-lg text-sm` | Table row actions |
+| Primary | `bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-xl text-sm font-medium` | Main CTA — never `bg-gray-900`/black |
+| Secondary | `border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium` | Cancel, secondary actions |
+| Destructive | `bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-sm font-medium` | Delete, disable |
+| Ghost | `text-gray-600 hover:bg-gray-100 px-3 py-1.5 rounded-lg text-sm` | Table row actions |
+
+### Segmented Tabs (pill control)
+
+Mirrors the ENTRADA/SALIDA toggle from the mobile app's operation screen — used for tab groups instead of underlined tabs.
+
+```tsx
+<div className="inline-flex rounded-xl border border-gray-200 bg-white p-1">
+  {tabs.map(({ key, label }) => (
+    <button
+      key={key}
+      className={`flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
+        tab === key ? 'bg-brand-600 text-white' : 'text-gray-500 hover:text-gray-700'
+      }`}
+    >
+      {tab === key ? <CheckIcon /> : null}
+      {label}
+    </button>
+  ))}
+</div>
+```
+
+Used in `ClientDetailPage` and `LocationDetailPage`.
 
 ### Status Badge
 
 ```tsx
-// Active → green; Inactive → slate; Online → green; Offline → red; Maintenance → amber
-<span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium
-  bg-green-50 text-green-700 border border-green-200">
+// Active/Online → success; Inactive → gray; Offline → red; Maintenance → amber
+<span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+  bg-success-50 text-success-700 border border-success-200">
   ACTIVE
 </span>
 ```
 
+See `src/components/Badge.tsx` for the full status→class map.
+
 ### DataTable
 
-- Full-width, `divide-y divide-slate-100`
-- Header: `bg-slate-50 text-xs font-semibold uppercase text-slate-500 px-4 py-3`
-- Row: `px-4 py-3 text-sm text-slate-700 hover:bg-slate-50`
+- Full-width wrapper: `rounded-xl border border-gray-200 overflow-hidden`, `divide-y divide-gray-200`
+- Header: `bg-gray-50 text-xs font-semibold uppercase text-gray-500 px-4 py-3`
+- Row: `px-4 py-3 text-sm text-gray-700 hover:bg-gray-50`
 - Empty state: centered illustration + message inside the table body
 
 ### Modal (FormModal / ConfirmModal)
 
 - Backdrop: `fixed inset-0 bg-black/40 backdrop-blur-sm`
-- Panel: `bg-white rounded-xl shadow-xl w-full max-w-md mx-4`
-- Header: `px-6 py-5 border-b border-slate-100`
-- Body: `px-6 py-5 space-y-4`
-- Footer: `px-6 py-4 border-t border-slate-100 flex justify-end gap-3`
+- Panel: `bg-white rounded-2xl shadow-xl w-full max-w-md mx-4`
+- Header: `px-6 py-4 border-b border-gray-100`
+- Body: `px-6 py-4 space-y-4`
+- Footer: `flex justify-end gap-3` inline in the body (no separate footer bar)
 
 ### PageHeader
 
 ```
 flex items-start justify-between mb-6
-left: h1 (title) + p (subtitle)
+left: h1 (title, text-2xl font-bold text-gray-900) + p (subtitle, text-gray-500)
 right: action button(s)
 ```
 
 ### Breadcrumb
 
 ```
-text-sm text-slate-500
+text-sm text-gray-500
 Clientes > [link] Nombre cliente > [current] Nombre instalación
 separator: / or ChevronRight icon
 ```
@@ -310,18 +328,22 @@ separator: / or ChevronRight icon
 
 ```
 src/
-  components/         # Shared UI: Sidebar, Layout, DataTable, Modal, Badge, PageHeader
+  components/         # Shared UI: Sidebar, Layout, DataTable, FormModal, ConfirmModal, Badge, PageHeader
   pages/
-    clients/          # Renamed from organizations/
+    clients/          # Renamed from organizations/ — the only top-level nav view today
       ClientsPage.tsx
       ClientDetailPage.tsx
       ClientFormModal.tsx
-    locations/        # Kept as top-level admin view
-    users/
-    dashboard/
+      LocationDetailPage.tsx
+    locations/        # LocationFormModal only — used inside the Clientes flow, no top-level page
+    terminals/        # TerminalFormModal only — used inside the Clientes flow, no top-level page
+    tariffs/          # TariffFormModal only — used inside the Clientes flow, no top-level page
     auth/
   api/
-    clients.ts        # Renamed from organizations.ts (re-exports same API)
+    organizations.ts, locations.ts, terminals.ts, tariffs.ts, users.ts
+    # All API modules are kept even for removed pages (dashboard/users/organizations top-level,
+    # locations/terminals/tariffs top-level) so those views can be restored later without
+    # rebuilding the data layer.
   types/
     index.ts          # Organization type stays; add Client alias if needed
 ```
@@ -340,8 +362,10 @@ src/
 ## What NOT to do
 
 - Do not use inline styles; use Tailwind classes only.
-- Do not use `text-black` or `bg-white` for the main content background — use `slate-*` palette.
+- Do not use `text-black` or `bg-white` for the main content background — use the `gray-*` palette.
+- Do not use `bg-gray-900`/black for primary CTAs — primary is always `bg-brand-600`.
 - Do not add heavy card shadows (`shadow-lg`, `shadow-xl`) outside of modals and dropdowns.
 - Do not add emoji to UI labels.
-- Do not hardcode widths in px except for the sidebar (w-64 / w-16).
+- Do not hardcode widths in px except for the sidebar (`w-12` / `w-52`).
 - Do not show "Organizaciones" anywhere in the UI — always use "Clientes".
+- Do not invent a new blue/green for buttons or badges — use the `brand-*` / `success-*` tokens so web stays visually consistent with the mobile app.

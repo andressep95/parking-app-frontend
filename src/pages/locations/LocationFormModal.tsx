@@ -90,7 +90,7 @@ export function LocationFormModal({ location, orgId: prefillOrgId, onClose }: Pr
               value={form.orgId}
               onChange={(e) => set('orgId', e.target.value)}
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             >
               <option value="">— Seleccionar organización —</option>
               {orgs?.map((o) => (
@@ -112,7 +112,7 @@ export function LocationFormModal({ location, orgId: prefillOrgId, onClose }: Pr
             onChange={(e) => set('locationName', e.target.value)}
             required
             placeholder="Sucursal Centro"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
@@ -126,7 +126,7 @@ export function LocationFormModal({ location, orgId: prefillOrgId, onClose }: Pr
             onChange={(e) => set('address', e.target.value)}
             required
             placeholder="Av. Bernardo O'Higgins 1234"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
@@ -141,7 +141,7 @@ export function LocationFormModal({ location, orgId: prefillOrgId, onClose }: Pr
               onChange={(e) => set('city', e.target.value)}
               required
               placeholder="Santiago"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
           <div>
@@ -155,7 +155,7 @@ export function LocationFormModal({ location, orgId: prefillOrgId, onClose }: Pr
               required
               min={1}
               placeholder="150"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
         </div>
@@ -165,7 +165,7 @@ export function LocationFormModal({ location, orgId: prefillOrgId, onClose }: Pr
           <select
             value={form.timezone}
             onChange={(e) => set('timezone', e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           >
             {TIMEZONES.map((tz) => (
               <option key={tz} value={tz}>
@@ -181,14 +181,14 @@ export function LocationFormModal({ location, orgId: prefillOrgId, onClose }: Pr
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            className="rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
           >
             Cancelar
           </button>
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+            className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {mutation.isPending ? 'Guardando...' : isEdit ? 'Actualizar' : 'Crear locación'}
           </button>
