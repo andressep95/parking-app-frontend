@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Badge } from '../../components/Badge';
+import { Breadcrumb } from '../../components/Breadcrumb';
 import { ConfirmModal } from '../../components/ConfirmModal';
 import { ErrorMessage } from '../../components/ErrorMessage';
 import { ClientFormModal } from './ClientFormModal';
@@ -31,14 +32,6 @@ type TerminalModal =
   | { type: 'create' }
   | { type: 'edit'; terminal: Terminal }
   | { type: 'delete'; terminal: Terminal };
-
-function ChevronLeftIcon() {
-  return (
-    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-    </svg>
-  );
-}
 
 function TabCheckIcon() {
   return (
@@ -118,48 +111,43 @@ export function ClientDetailPage() {
   return (
     <div>
       {/* Breadcrumb */}
-      <button
-        onClick={() => navigate('/clients')}
-        className="mb-4 flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700"
-      >
-        <ChevronLeftIcon />
-        Clientes
-      </button>
+      <Breadcrumb
+        items={[
+          { label: 'Clientes', to: '/clients' },
+          { label: client?.orgName ?? 'Cliente' },
+        ]}
+      />
 
       {/* Header */}
-      {loadingClient ? (
-        <div className="mb-6 space-y-2">
-          <div className="h-7 w-64 animate-pulse rounded bg-gray-100" />
-          <div className="h-4 w-48 animate-pulse rounded bg-gray-100" />
-        </div>
-      ) : client ? (
-        <div className="mb-6 flex items-start justify-between">
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-gray-900">{client.orgName}</h1>
-              <Badge status={client.orgStatus} />
-            </div>
-            <p className="mt-1 text-sm text-gray-500">
-              {client.rutCompany} · {client.orgEmail}
-              {client.phoneNumber ? ` · ${client.phoneNumber}` : ''}
-            </p>
+      <div className="mb-4 rounded-xl border border-gray-200 bg-white p-6">
+        {loadingClient ? (
+          <div className="space-y-2">
+            <div className="h-7 w-64 animate-pulse rounded bg-gray-100" />
+            <div className="h-4 w-48 animate-pulse rounded bg-gray-100" />
           </div>
-          <button
-            onClick={() => setEditClient(true)}
-            className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Editar cliente
-          </button>
-        </div>
-      ) : null}
+        ) : client ? (
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl font-bold text-gray-900">{client.orgName}</h1>
+                <Badge status={client.orgStatus} />
+              </div>
+              <p className="mt-1 text-sm text-gray-500">
+                {client.rutCompany} · {client.orgEmail}
+                {client.phoneNumber ? ` · ${client.phoneNumber}` : ''}
+              </p>
+            </div>
+          </div>
+        ) : null}
+      </div>
 
       {/* Tabs */}
-      <div className="mb-4 inline-flex rounded-xl border border-gray-200 bg-white p-1">
+      <div className="mb-4 inline-flex rounded-md border border-gray-200 bg-white p-1">
         {([['locations', 'Instalaciones'], ['terminals', 'Terminales'], ['info', 'Información']] as const).map(([key, label]) => (
           <button
             key={key}
             onClick={() => setTab(key)}
-            className={`flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
+            className={`flex items-center gap-1.5 rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
               tab === key
                 ? 'bg-brand-600 text-white'
                 : 'text-gray-500 hover:text-gray-700'
@@ -177,7 +165,7 @@ export function ClientDetailPage() {
           <div className="mb-4 flex justify-end">
             <button
               onClick={() => setLocModal({ type: 'create' })}
-              className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+              className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
             >
               + Nueva instalación
             </button>

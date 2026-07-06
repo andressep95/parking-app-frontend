@@ -66,6 +66,18 @@ The visual style mirrors **shadcn/ui** structure (clean, minimal, generous white
 
 Avoid heavy `box-shadow`. Use `border border-gray-200` for panels. Modals get `shadow-xl` + `backdrop-blur-sm` on the overlay.
 
+### Card-wrapped content (no loose content on the page background)
+
+Every block that shows real data — entity headers, tables, tab panels, info lists, notices — must sit inside a card: `bg-white rounded-xl border border-gray-200` (with padding matched to content, e.g. `p-6` for a header block, `p-3` for a small inline notice). Never leave a heading, status badge, subtitle, or paragraph of data floating directly on the `bg-gray-50` page background — it reads as unfinished. This is the same convention Cloudflare's dashboard uses (`img/sidebar_collapse.png`): the gray canvas is just spacing, every functional block pops as a distinct white surface.
+
+Exceptions — page chrome, not data, stays bare:
+- Breadcrumb / back link (e.g. `← Clientes`)
+- The `PageHeader` title + description on list pages (e.g. "Clientes" on `ClientsPage`) — it's a section label, not a record's data
+- Standalone buttons — already self-contained by their own background
+- The segmented tab control — already a bordered white pill (see Segmented Tabs pattern)
+
+Entity detail headers ARE data about a specific record (name, status badge, metadata) and must be card-wrapped like the rest of the page — e.g. `ClientDetailPage` and `LocationDetailPage` wrap their title/badge/subtitle block in a card instead of floating it directly above the tabs.
+
 ---
 
 ## Layout
@@ -302,11 +314,13 @@ right: action button(s)
 
 ### Breadcrumb
 
+Shared component: `src/components/Breadcrumb.tsx`. Takes `items: { label: string; to?: string }[]`; every item except the last renders as a `Link` (`text-gray-500 hover:text-gray-700`), separated by a `ChevronRightIcon`; the last item is the current page (`font-medium text-gray-900`, not a link, `aria-current="page"`).
+
 ```
-text-sm text-gray-500
 Clientes > [link] Nombre cliente > [current] Nombre instalación
-separator: / or ChevronRight icon
 ```
+
+Every detail page builds its full ancestor path, not just a "back" link — e.g. `LocationDetailPage` renders `Clientes > {client.orgName} > {location.locationName}`, with both ancestors clickable. List pages (`ClientsPage`) don't need one — the `PageHeader` title already says where you are.
 
 ---
 
