@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### [701cb51] — 2026-07-05
+
+**feat(locations): show active sessions in transactions tab**
+
+> what: Updates the Transaction type and the Transacciones table to handle the new nullable transaction fields and status field from the backend, adding an Estado badge column and showing dashes for payment data that doesn't exist yet on active sessions
+> why: The backend now returns active (unpaid) parking sessions alongside completed transactions, and the UI needs to render both without crashing or hiding real-time occupancy
+> breaking: false
+
+#### Changed
+
+- `src/components/Badge.tsx`
+- `src/pages/clients/LocationDetailPage.tsx`
+- `src/types/index.ts`
+
+---
+
 ### [e78fb17] — 2026-07-05
 
 **fix(layout): fix sidebar height, icon centering and hover jump**
