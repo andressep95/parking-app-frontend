@@ -135,10 +135,10 @@ export interface Tariff {
   vehicleType: VehicleType;
   tariffType: TariffType;
   name: string;
-  pricePerMinute?: number;
+  pricePerMinute: number | null;
   graceMinutes: number;
-  maxCharge?: number;
-  flatAmount?: number;
+  maxCharge: number | null;
+  flatAmount: number | null;
   brackets?: TariffBracket[];
   isActive: boolean;
   validFrom: string;
@@ -162,6 +162,22 @@ export interface CreateTariffRequest {
   maxCharge?: number;
   flatAmount?: number;
   brackets?: BracketRequest[];
+}
+
+export type PaymentMethod = 'TUU_CARD' | 'TUU_CASH' | 'TUU_TRANSFER';
+
+export interface Transaction {
+  transactionId: string;
+  parkingSessionId: string;
+  plate: string;
+  vehicleType: VehicleType;
+  entryAt: string;
+  exitAt: string | null;
+  durationMinutes: number | null;
+  amount: number;
+  paymentMethod: PaymentMethod;
+  tuuReference: string | null;
+  transactionAt: string;
 }
 
 export interface ApiError {

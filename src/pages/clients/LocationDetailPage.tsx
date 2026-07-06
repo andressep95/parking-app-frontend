@@ -12,9 +12,10 @@ import { getOrganization } from '../../api/organizations';
 import { getLocation } from '../../api/locations';
 import { listUsers, createUser, activateUser, deactivateUser } from '../../api/users';
 import { listTariffs, deactivateTariff } from '../../api/tariffs';
+import { listTransactions } from '../../api/transactions';
 import type { Tariff, User, CreateUserRequest } from '../../types/index';
 
-type Tab = 'operators' | 'tariffs';
+type Tab = 'operators' | 'tariffs' | 'transactions';
 
 type TariffModal = { type: 'create' } | { type: 'deactivate'; tariff: Tariff };
 
@@ -209,6 +210,21 @@ const VEHICLE_LABELS: Record<string, string> = {
   BUS: 'Bus / Van',
 };
 
+const PAYMENT_METHOD_LABELS: Record<string, string> = {
+  TUU_CARD: 'Tarjeta',
+  TUU_CASH: 'Efectivo',
+  TUU_TRANSFER: 'Transferencia',
+};
+
+function formatDateTime(value: string): string {
+  return new Date(value).toLocaleString('es-CL', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 function formatTariffPrice(tar: Tariff): string {
   switch (tar.tariffType) {
     case 'PER_MINUTE':
@@ -285,6 +301,13 @@ export function LocationDetailPage() {
     staleTime: 30_000,
   });
 
+  const { data: transactions, isLoading: loadingTransactions } = useQuery({
+    queryKey: ['transactions', locationId],
+    queryFn: () => listTransactions(locationId!),
+    enabled: !!locationId && tab === 'transactions',
+    staleTime: 30_000,
+  });
+
   const toggleOperatorMutation = useMutation({
     mutationFn: ({ userId, active }: { userId: string; active: boolean }) =>
       active ? deactivateUser(userId) : activateUser(userId),
@@ -302,6 +325,7 @@ export function LocationDetailPage() {
   const tabs: { key: Tab; label: string }[] = [
     { key: 'operators', label: 'Operadores' },
     { key: 'tariffs', label: 'Tarifas' },
+    { key: 'transactions', label: 'Transacciones' },
   ];
 
   if (locationError) {
@@ -472,7 +496,7 @@ export function LocationDetailPage() {
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-900">{formatTariffPrice(tar)}</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
-                        {tar.maxCharge !== undefined ? `$${tar.maxCharge.toLocaleString('es-CL')}` : '—'}
+                        {tar.maxCharge != null ? `$${tar.maxCharge.toLocaleString('es-CL')}` : '—'}
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-500">{tar.graceMinutes} min</td>
                       <td className="px-4 py-3 text-sm text-gray-500">
@@ -509,6 +533,58 @@ export function LocationDetailPage() {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+
+      {/* Tab: Transacciones */}
+      {tab === 'transactions' && (
+        <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-200 bg-gray-50">
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Patente</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Vehículo</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Ingreso</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Salida</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Duración</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Monto</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Pago</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">Transacción</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {loadingTransactions ? (
+                <SkeletonRows cols={8} />
+              ) : !transactions?.length ? (
+                <tr>
+                  <td colSpan={8} className="py-12 text-center text-sm text-gray-400">
+                    No hay transacciones registradas para esta instalación
+                  </td>
+                </tr>
+              ) : (
+                transactions.map((tx) => (
+                  <tr key={tx.transactionId} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm font-medium text-gray-900">{tx.plate}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">
+                      {VEHICLE_LABELS[tx.vehicleType] ?? tx.vehicleType}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-500">{formatDateTime(tx.entryAt)}</td>
+                    <td className="px-4 py-3 text-sm text-gray-500">
+                      {tx.exitAt != null ? formatDateTime(tx.exitAt) : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-500">
+                      {tx.durationMinutes != null ? `${tx.durationMinutes} min` : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-900">${tx.amount.toLocaleString('es-CL')}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">
+                      {PAYMENT_METHOD_LABELS[tx.paymentMethod] ?? tx.paymentMethod}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-500">{formatDateTime(tx.transactionAt)}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       )}
 
