@@ -38,14 +38,15 @@ export function Sidebar() {
   return (
     <aside className="group flex h-full w-[60px] hover:w-52 shrink-0 flex-col bg-white border-r border-gray-200 overflow-x-hidden transition-[width] duration-200 ease-in-out">
 
-      {/* Logo */}
-      <div className="flex h-12 shrink-0 items-center border-b border-gray-200 px-3 gap-3">
+      {/* Logo — pl-[18px] centers the h-6 icon within the 60px collapsed rail;
+          this offset never changes between collapsed/expanded so it never jumps. */}
+      <div className="flex h-[60px] shrink-0 items-center gap-3 border-b border-gray-200 pl-[18px]">
         <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-brand-600">
           <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 3h14M5 3v18M5 3H3m16 0v18m0-18h2M5 21h14M9 8h3a2 2 0 110 4H9V8z" />
           </svg>
         </div>
-        <span className="whitespace-nowrap text-sm font-semibold text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-150 delay-75">
+        <span className="hidden whitespace-nowrap text-sm font-semibold text-gray-900 group-hover:inline">
           Parking App
         </span>
       </div>
@@ -59,7 +60,7 @@ export function Sidebar() {
                 to={item.to}
                 title={item.label}
                 className={({ isActive }) =>
-                  `flex items-center gap-2.5 rounded px-2 py-1.5 text-sm transition-colors ${
+                  `ml-1.5 flex h-9 w-9 items-center gap-2.5 overflow-hidden rounded px-2.5 text-sm transition-[width,background-color,color] duration-200 group-hover:w-[calc(100%-0.375rem)] ${
                     isActive
                       ? 'bg-brand-50 text-brand-700 font-medium'
                       : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
@@ -67,7 +68,7 @@ export function Sidebar() {
                 }
               >
                 {item.icon}
-                <span className="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 delay-75">
+                <span className="hidden whitespace-nowrap group-hover:inline">
                   {item.label}
                 </span>
               </NavLink>
@@ -77,12 +78,12 @@ export function Sidebar() {
       </nav>
 
       {/* User */}
-      <div className="border-t border-gray-200 px-1.5 py-2 space-y-px">
-        <div className="flex items-center gap-2.5 px-2 py-1.5">
+      <div className="border-t border-gray-200 py-2 space-y-px">
+        <div className="flex items-center gap-2.5 py-1.5 pl-[18px]">
           <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-700">
             {initials}
           </div>
-          <div className="min-w-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150 delay-75">
+          <div className="hidden min-w-0 group-hover:block">
             <p className="whitespace-nowrap text-xs font-medium text-gray-700">
               {user?.givenName} {user?.familyName}
             </p>
@@ -92,10 +93,10 @@ export function Sidebar() {
         <button
           onClick={signOut}
           title="Cerrar sesión"
-          className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-sm text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700"
+          className="ml-3 flex h-9 w-9 items-center gap-2.5 overflow-hidden rounded-md px-2.5 text-sm text-gray-500 transition-[width,background-color,color] duration-200 hover:bg-gray-50 hover:text-gray-700 group-hover:w-[calc(100%-0.75rem)]"
         >
           <IconSignOut />
-          <span className="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 delay-75">
+          <span className="hidden whitespace-nowrap group-hover:inline">
             Cerrar sesión
           </span>
         </button>

@@ -15,10 +15,10 @@ function HeaderBar() {
 export function Layout() {
   return (
     <BreadcrumbProvider>
-      <div className="flex h-screen flex-col overflow-hidden bg-gray-50">
-        <HeaderBar />
-        <div className="flex flex-1 overflow-hidden">
-          <Sidebar />
+      <div className="flex h-screen overflow-hidden bg-gray-50">
+        <Sidebar />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <HeaderBar />
           <main className="flex-1 overflow-y-auto">
             <div className="mx-auto max-w-7xl p-6">
               <Outlet />

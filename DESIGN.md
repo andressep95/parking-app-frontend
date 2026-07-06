@@ -83,22 +83,22 @@ Entity detail headers ARE data about a specific record (name, status badge, meta
 ## Layout
 
 ```
-┌────────────────────────────────────────────────────────────┐
-│  Header Bar — full width, h-[60px], bg-white, border-b      │
-├──────────────────────────┬───────────────────────────────────┤
-│  Sidebar (hover-expand)  │  Main content area                │
-│  w-52 (hovered)          │  flex-1, overflow-y-auto           │
-│  w-[60px] (default)      │  p-6 or p-8                        │
+┌──────────────────────────┬───────────────────────────────────┐
+│  Sidebar (hover-expand)  │  Header Bar — h-[60px], bg-white   │
+│  w-52 (hovered)          │  border-b, spans remaining width   │
+│  w-[60px] (default)      ├───────────────────────────────────┤
+│  full viewport height    │  Main content area                │
+│                          │  flex-1, overflow-y-auto, p-6/p-8  │
 └──────────────────────────┴───────────────────────────────────┘
 ```
 
-The `Layout` component (`src/components/Layout.tsx`) renders a `HeaderBar` above a row containing `<Sidebar />` + `<Outlet />`. The header's height (`h-[60px]`) intentionally matches the sidebar's default (collapsed) width, the same way Cloudflare's top bar height matches its icon rail width — see `img/sidebar_collapse.png`.
+The `Layout` component (`src/components/Layout.tsx`) renders `<Sidebar />` as a full-height column on the left, and a right-hand column (header + main) next to it — **the sidebar spans the full vertical height, the header bar sits beside it** and only covers the remaining width, it never spans over the sidebar. The header's height (`h-[60px]`) intentionally matches the sidebar's default (collapsed) width, so the two form a clean corner, the same relationship as Cloudflare's top bar height vs. its icon rail width — see `img/sidebar_collapse.png`.
 
 ---
 
 ## Header Bar
 
-- Always visible, full viewport width, sits above both the sidebar and the content — not just above `<main>`.
+- Always visible, sits to the right of the sidebar and spans the remaining width — the sidebar is the one that spans the full viewport height, the header never renders above it.
 - `bg-white border-b border-gray-200`, fixed `h-[60px]` (never grows/shrinks with content).
 - Renders the current page's `Breadcrumb` (see Component Patterns), vertically centered. Empty (no crumbs) renders nothing but keeps its height, so the layout never jumps.
 - Pages don't render `<Breadcrumb>` inline anymore. They call `usePageBreadcrumb(items)` (from `src/components/BreadcrumbContext.tsx`) once, near their data hooks; the hook publishes `items` to the header via context and clears them on unmount. List pages set a single-item, non-link crumb (e.g. `[{ label: 'Clientes' }]`) so the header always shows where you are.
