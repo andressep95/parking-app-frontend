@@ -36,7 +36,7 @@ export function Sidebar() {
   const initials = [user?.givenName?.[0], user?.familyName?.[0]].filter(Boolean).join('').toUpperCase() || '?';
 
   return (
-    <aside className="group flex h-screen w-12 hover:w-52 shrink-0 flex-col bg-white border-r border-gray-200 overflow-x-hidden transition-[width] duration-200 ease-in-out">
+    <aside className="group flex h-full w-[60px] hover:w-52 shrink-0 flex-col bg-white border-r border-gray-200 overflow-x-hidden transition-[width] duration-200 ease-in-out">
 
       {/* Logo */}
       <div className="flex h-12 shrink-0 items-center border-b border-gray-200 px-3 gap-3">

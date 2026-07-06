@@ -71,7 +71,7 @@ Avoid heavy `box-shadow`. Use `border border-gray-200` for panels. Modals get `s
 Every block that shows real data — entity headers, tables, tab panels, info lists, notices — must sit inside a card: `bg-white rounded-xl border border-gray-200` (with padding matched to content, e.g. `p-6` for a header block, `p-3` for a small inline notice). Never leave a heading, status badge, subtitle, or paragraph of data floating directly on the `bg-gray-50` page background — it reads as unfinished. This is the same convention Cloudflare's dashboard uses (`img/sidebar_collapse.png`): the gray canvas is just spacing, every functional block pops as a distinct white surface.
 
 Exceptions — page chrome, not data, stays bare:
-- Breadcrumb / back link (e.g. `← Clientes`)
+- Breadcrumb (lives in the persistent white header bar, not inline on the page — see Header Bar section)
 - The `PageHeader` title + description on list pages (e.g. "Clientes" on `ClientsPage`) — it's a section label, not a record's data
 - Standalone buttons — already self-contained by their own background
 - The segmented tab control — already a bordered white pill (see Segmented Tabs pattern)
@@ -83,14 +83,25 @@ Entity detail headers ARE data about a specific record (name, status badge, meta
 ## Layout
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  Sidebar (hover-expand)  │  Main content area             │
-│  w-52 (hovered)          │  flex-1, overflow-y-auto       │
-│  w-12 (default)          │  p-6 or p-8                    │
-└──────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────┐
+│  Header Bar — full width, h-[60px], bg-white, border-b      │
+├──────────────────────────┬───────────────────────────────────┤
+│  Sidebar (hover-expand)  │  Main content area                │
+│  w-52 (hovered)          │  flex-1, overflow-y-auto           │
+│  w-[60px] (default)      │  p-6 or p-8                        │
+└──────────────────────────┴───────────────────────────────────┘
 ```
 
-The `Layout` component (`src/components/Layout.tsx`) renders `<Sidebar />` + `<Outlet />`.
+The `Layout` component (`src/components/Layout.tsx`) renders a `HeaderBar` above a row containing `<Sidebar />` + `<Outlet />`. The header's height (`h-[60px]`) intentionally matches the sidebar's default (collapsed) width, the same way Cloudflare's top bar height matches its icon rail width — see `img/sidebar_collapse.png`.
+
+---
+
+## Header Bar
+
+- Always visible, full viewport width, sits above both the sidebar and the content — not just above `<main>`.
+- `bg-white border-b border-gray-200`, fixed `h-[60px]` (never grows/shrinks with content).
+- Renders the current page's `Breadcrumb` (see Component Patterns), vertically centered. Empty (no crumbs) renders nothing but keeps its height, so the layout never jumps.
+- Pages don't render `<Breadcrumb>` inline anymore. They call `usePageBreadcrumb(items)` (from `src/components/BreadcrumbContext.tsx`) once, near their data hooks; the hook publishes `items` to the header via context and clears them on unmount. List pages set a single-item, non-link crumb (e.g. `[{ label: 'Clientes' }]`) so the header always shows where you are.
 
 ---
 
@@ -98,7 +109,7 @@ The `Layout` component (`src/components/Layout.tsx`) renders `<Sidebar />` + `<O
 
 ### Behavior
 
-- **Default** (`w-12`): Icon-only rail.
+- **Default** (`w-[60px]`): Icon-only rail. Widened from the original `w-12` (+25%) so it isn't cramped and lines up with the header bar's height.
 - **Hovered** (`group-hover:w-52`): Expands to show icon + label. No toggle button or persisted state — purely a CSS hover transition on the parent `group`.
 - Nav items are filtered by permission (e.g. "Clientes" only renders for `canManageOrgs`), so the list can be a single item.
 
@@ -116,7 +127,7 @@ The `Layout` component (`src/components/Layout.tsx`) renders `<Sidebar />` + `<O
 └─────────────────────┘
 ```
 
-### Anatomy (default, w-12)
+### Anatomy (default, w-[60px])
 
 ```
 ┌────┐
@@ -320,7 +331,7 @@ Shared component: `src/components/Breadcrumb.tsx`. Takes `items: { label: string
 Clientes > [link] Nombre cliente > [current] Nombre instalación
 ```
 
-Every detail page builds its full ancestor path, not just a "back" link — e.g. `LocationDetailPage` renders `Clientes > {client.orgName} > {location.locationName}`, with both ancestors clickable. List pages (`ClientsPage`) don't need one — the `PageHeader` title already says where you are.
+It's rendered once, inside the persistent Header Bar (see Layout), not per-page. Pages publish their trail with `usePageBreadcrumb(items)` (`src/components/BreadcrumbContext.tsx`) instead of rendering `<Breadcrumb>` directly. Every detail page builds its full ancestor path, not just a "back" link — e.g. `LocationDetailPage` calls `usePageBreadcrumb([{label:'Clientes',to:'/clients'}, {label:client.orgName,to:'/clients/'+id}, {label:location.locationName}])`, with both ancestors clickable. List pages (`ClientsPage`) still call the hook with a single, non-link item (e.g. `[{ label: 'Clientes' }]`) so the header bar is never empty.
 
 ---
 
@@ -380,6 +391,6 @@ src/
 - Do not use `bg-gray-900`/black for primary CTAs — primary is always `bg-brand-600`.
 - Do not add heavy card shadows (`shadow-lg`, `shadow-xl`) outside of modals and dropdowns.
 - Do not add emoji to UI labels.
-- Do not hardcode widths in px except for the sidebar (`w-12` / `w-52`).
+- Do not hardcode widths in px except for the sidebar (`w-[60px]` / `w-52`) and the header bar height (`h-[60px]`, which must always match the sidebar's default width).
 - Do not show "Organizaciones" anywhere in the UI — always use "Clientes".
 - Do not invent a new blue/green for buttons or badges — use the `brand-*` / `success-*` tokens so web stays visually consistent with the mobile app.

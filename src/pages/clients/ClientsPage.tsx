@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Badge } from '../../components/Badge';
+import { usePageBreadcrumb } from '../../components/BreadcrumbContext';
 import { ConfirmModal } from '../../components/ConfirmModal';
 import { PageHeader } from '../../components/PageHeader';
 import { ErrorMessage } from '../../components/ErrorMessage';
@@ -16,10 +17,14 @@ import type { Organization } from '../../types/index';
 
 type Modal = { type: 'create' } | { type: 'edit'; org: Organization } | { type: 'delete'; org: Organization };
 
+const BREADCRUMB = [{ label: 'Clientes' }];
+
 export function ClientsPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [modal, setModal] = useState<Modal | null>(null);
+
+  usePageBreadcrumb(BREADCRUMB);
 
   const { data: clients, isLoading, error, refetch } = useQuery({
     queryKey: ['organizations'],

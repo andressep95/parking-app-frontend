@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Badge } from '../../components/Badge';
-import { Breadcrumb } from '../../components/Breadcrumb';
+import { usePageBreadcrumb } from '../../components/BreadcrumbContext';
 import { ConfirmModal } from '../../components/ConfirmModal';
 import { ErrorMessage } from '../../components/ErrorMessage';
 import { FormModal } from '../../components/FormModal';
@@ -261,6 +261,12 @@ export function LocationDetailPage() {
     staleTime: 30_000,
   });
 
+  usePageBreadcrumb([
+    { label: 'Clientes', to: '/clients' },
+    { label: client?.orgName ?? 'Cliente', to: `/clients/${clientId}` },
+    { label: location?.locationName ?? 'Instalación' },
+  ]);
+
   const { data: allUsers, isLoading: loadingUsers } = useQuery({
     queryKey: ['users', clientId],
     queryFn: () => listUsers(clientId),
@@ -311,15 +317,6 @@ export function LocationDetailPage() {
 
   return (
     <div>
-      {/* Breadcrumb */}
-      <Breadcrumb
-        items={[
-          { label: 'Clientes', to: '/clients' },
-          { label: client?.orgName ?? 'Cliente', to: `/clients/${clientId}` },
-          { label: location?.locationName ?? 'Instalación' },
-        ]}
-      />
-
       {/* Header */}
       <div className="mb-4 rounded-xl border border-gray-200 bg-white p-6">
         {loadingLocation ? (

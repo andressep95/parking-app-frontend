@@ -19,7 +19,7 @@ function ChevronRightIcon() {
 
 export function Breadcrumb({ items }: Props) {
   return (
-    <nav className="mb-4 flex items-center gap-1.5 text-sm" aria-label="Breadcrumb">
+    <nav className="flex items-center gap-1.5 text-sm" aria-label="Breadcrumb">
       {items.map((item, i) => {
         const isLast = i === items.length - 1;
         return (
