@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### [68fc25a] — 2026-07-05
+
+**feat(locations): add transactions tab and fix tariff crash**
+
+> what: Adds a "Transacciones" tab to LocationDetailPage backed by the new GET /transactions endpoint, and fixes a crash where a null tariff.maxCharge from the API (checked with !== undefined instead of != null) threw on .toLocaleString()
+> why: Admins need to see registered transactions per location, and the null check bug crashed the Tarifas tab whenever a tariff had no maxCharge set
+> breaking: false
+
+#### Added
+
+- `src/api/transactions.ts`
+
+#### Changed
+
+- `src/pages/clients/LocationDetailPage.tsx`
+- `src/types/index.ts`
+
+---
+
 ### [5f5a113] — 2026-07-05
 
 **feat(layout): add persistent full-width header bar**
